@@ -4,7 +4,7 @@ import logging.handlers
 from typing import Dict, List, Optional, Union
 import faiss
 from langchain_community.vectorstores import FAISS
-from langchain.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama import OllamaLLM
 from get_embedding_function import get_embedding_function
 import tiktoken
@@ -20,16 +20,18 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 #what is sent to the llm prior to the question, important for best results
 PROMPT_TEMPLATE = """
 {question}
-Assume you are a legal expert codifying central bank legislation. Answer the following question exclusively based on the set of legislative documents enacted up to and including YEAR. Documents relevant to this query follow the filename pattern ISO2CODE_CBL_YEAR-MONTH.
-Instructions:
-• Respond directly to the specific  question.
-• Your first sentence must clearly state only the correct option from the provided multiple-choice answers.
-• In one or two sentences following your initial choice, explicitly reference the precise law, amendment, chapter, article, or document from which the information was obtained.
-• Maintain brevity: limit your total response to a maximum of three sentences.
-• Do not include additional advice, explanations beyond necessary citations, or external information.
-• If you do not have the explicit answer to the question provided in the context, answer "I don't know.
 
-Context retrieved from relevant documents:
+You are a scholar of Anglo-Saxon history and literature. Answer the question based solely on the primary source materials provided below. These sources may include Old English texts, chronicles, charters, poetry, and other documents from the Anglo-Saxon period (roughly 5th-11th centuries).
+
+Instructions:
+- Answer the question directly and clearly
+- Cite specific sources, manuscripts, or text passages that support your answer
+- If referencing Old English text, you may include brief quotations
+- Acknowledge when sources are fragmentary, damaged, or disputed
+- If the sources don't contain information to answer the question, state "The available sources do not address this question."
+- Keep your response concise (3-5 sentences unless more detail is needed)
+
+Context from Anglo-Saxon sources:
 
 {context}
 
